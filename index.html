@@ -4,232 +4,220 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal RRHH Chascomús</title>
-    <meta name="theme-color" content="#004a7c">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/jpeg" href="logo.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-blue: #004a7c; --accent-green: #97d700; --bg-light: #f4f7f6; }
-        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-light); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        header { background: var(--primary-blue); color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
-        .header-content { display: flex; align-items: center; }
-        .header-logo { height: 40px; margin-right: 10px; border-radius: 4px; }
-        .header-info h1 { font-size: 0.9rem; margin: 0; }
-        .btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
+        :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+        header { background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header-logo { height: 35px; border-radius: 4px; }
+        
+        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; transition: all 0.3s; }
         .chat-container.with-input { padding-bottom: 90px; }
-
-        .message-row { display: flex; flex-direction: column; width: 100%; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .message { max-width: 85%; padding: 12px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; }
-        .bot { background: white; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #ddd; }
-        .user { background: var(--primary-blue); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-
-        .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-        .option-button { background: white; border: 1.5px solid var(--primary-blue); color: var(--primary-blue); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 0.85rem; }
-        .option-button:active { background: var(--primary-blue); color: white; }
+        
+        .message { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; animation: fadeIn 0.3s; position: relative; }
+        .bot { background: white; align-self: flex-start; border: 1px solid #ddd; border-bottom-left-radius: 2px; }
+        .user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .option-button { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 20px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
+        .option-button:active { background: var(--primary); color: white; }
         
         .input-area { 
-            position: fixed; 
-            bottom: -100px; 
-            left: 10px; 
-            right: 10px; 
-            background: white; 
-            display: flex; 
-            gap: 8px; 
-            padding: 8px; 
-            border-radius: 30px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000; 
+            position: fixed; bottom: -100px; left: 10px; right: 10px; 
+            background: white; padding: 8px; border-radius: 30px; 
+            display: flex; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; 
         }
-        .input-area.show { bottom: 15px; }
+        .input-area.show { bottom: 20px; }
+        
+        #userInput { flex: 1; border: none; outline: none; padding: 10px 15px; font-size: 16px; background: transparent; }
+        #sendButton { background: var(--accent); border: none; padding: 0 20px; border-radius: 20px; font-weight: bold; color: var(--primary); cursor: pointer; }
 
-        #userInput { flex: 1; padding: 10px 18px; border: none; outline: none; font-size: 16px; background: transparent; }
-        #sendButton { background: var(--accent-green); border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; color: var(--primary-blue); }
-
-        .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary-blue); margin-top: 5px; }
-        .form-card label { display: block; font-size: 0.7rem; font-weight: bold; color: var(--primary-blue); margin-top: 5px; }
-        .form-card input, .form-card select { width: 100%; padding: 8px; margin-top: 3px; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-submit { background: #27ae60; color: white; border: none; padding: 10px; border-radius: 5px; font-weight: bold; margin-top: 10px; width: 100%; cursor: pointer; }
-        .btn-cancel { background: #95a5a6; color: white; border: none; padding: 10px; border-radius: 5px; width: 100%; margin-top: 5px; cursor: pointer; }
+        .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; }
+        .form-card label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; }
+        input[type="date"], input[type="number"], select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <img src="logo.jpg" alt="Logo" class="header-logo" onerror="this.style.display='none'">
-            <div class="header-info"><h1>Portal RRHH Chascomús</h1></div>
-        </div>
-        <button onclick="clearChat()" class="btn-logout">Salir</button>
-    </header>
 
-    <main id="chatMessages" class="chat-container"></main>
+<header>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="logo.jpg" class="header-logo" onerror="this.style.display='none'">
+        <span style="font-weight:bold; font-size:0.9rem;">RRHH Chascomús</span>
+    </div>
+    <button onclick="clearSession()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:4px; padding:5px 10px; font-size:0.7rem;">Salir</button>
+</header>
 
-    <footer id="inputBar" class="input-area">
-        <input type="text" id="userInput" placeholder="Escribe aquí..." autocomplete="off">
-        <button id="sendButton">Enviar</button>
-    </footer>
+<main id="chatMessages" class="chat-container"></main>
 
-    <script>
-        const WHATSAPP_RRHH = "5492241538198";
-        const TEL_MEDICINA = "2241000000";
+<footer id="inputBar" class="input-area">
+    <input type="text" id="userInput" placeholder="Escribe aquí..." autocomplete="off">
+    <button id="sendButton">Enviar</button>
+</footer>
 
-        const responses = {
-            'ans_vacas': `<strong>📅 Vacaciones según Antigüedad:</strong><br><br>• <b>< Menos de 5 años:</b> 14 días.<br>• <b> De 5-10 años:</b> 21 días.<br>• <b> de 10-20 años:</b> 28 días.<br>• <b>>Mas de 20 años:</b> 35 días.<br><br><i>* Computado al 31 de diciembre.</i>`,
-            'info_arts': `<strong>📑 Artículos Disponibles:</strong><br><br>• <b>Art 1:</b> Asuntos Particulares.<br>• <b>Art 2:</b> Familiar Enfermo.<br>• <b>Art 3:</b> Donación de Sangre.<br>• <b>Art 4:</b> Fallecimiento.<br>• <b>Art 5:</b> Cuidado de Hijo.<br>• <b>Maternidad/Embarazo</b><br>• <b>Accidente Laboral (ART)</b>`,
-            'med_info': `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 Dorrego esq. Bolivar.<br>📞 <a href="tel:${TEL_MEDICINA}">${TEL_MEDICINA}</a><br><br><b>Docentes:</b> Lun, Mar y Mié: 07:30 a 09:00.<br><b>No Docentes:</b> Lun 14-16:30, Mar/Jue 9-11, Mié/Vie 10-12:30.`,
-            'intranet_link': `<a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 Ir a la Intranet</a>`,
-            'ayuda_clave': `Para resetear tu clave, envía Nombre y Legajo al operador.`,
-            'ans_cert': `Plazo: <b>48 horas hábiles</b> de ocurrida la inasistencia.`,
-            'ans_art': `1. Avisar al jefe. 2. Llamar ART. 3. Denunciar en RRHH < 24hs.`,
-            'ans_rec': `Haber mensual: 2do día hábil. Extras: entre el 15 y 20.`,
-            'contacto_humano': `<a href="https://wa.me/${WHATSAPP_RRHH}">👉 Chatear con RRHH</a>`
-        };
+<script>
+    const CONFIG = {
+        whatsapp: "5492241538198",
+        telefonoMedicina: "2241000000"
+    };
 
-        const menus = {
-            main: { id: 'main', title: '¿Qué trámite deseas realizar?', options: [
-                { id: 'recibos', label: '📄 Recibos de Sueldo' },
-                { id: 'licencias', label: '📝 Licencias y Artículos' },
-                { id: 'medicina', label: '🏥 Medicina Laboral' },
-                { id: 'faq', label: '❓ Preguntas Frecuentes' },
-                { id: 'contacto', label: '👤 Hablar con un Operador', type: 'leaf', apiKey: 'contacto_humano' }
-            ]},
-            recibos: { id: 'recibos', parent: 'main', title: 'Recibos:', options: [
-                { id: 'ir_intranet', label: '🌐 Intranet', type: 'leaf', apiKey: 'intranet_link' },
-                { id: 'error_ingreso', label: '🔑 Ayuda Clave', type: 'leaf', apiKey: 'ayuda_clave' }
-            ]},
-            licencias: { id: 'licencias', parent: 'main', title: 'Licencias:', options: [
-                { id: 'form_vacaciones', label: '🏖️ Vacaciones', type: 'form', formType: 'vacaciones' },
-                { id: 'form_articulos', label: '📑 Artículos', type: 'form', formType: 'articulos' },
-                { id: 'lic_info', label: 'ℹ️ Información', type: 'leaf', apiKey: 'info_arts' }
-            ]},
-            medicina: { id: 'medicina', parent: 'main', title: 'Medicina Laboral:', options: [
-                { id: 'h', label: '⏰ Horarios', type: 'leaf', apiKey: 'med_info' }
-            ]},
-            faq: { id: 'faq', parent: 'main', title: 'Preguntas:', options: [
-                { id: 'f1', label: '📅 Días Vacas', type: 'leaf', apiKey: 'ans_vacas' },
-                { id: 'f2', label: '⏱️ Certificados', type: 'leaf', apiKey: 'ans_cert' },
-                { id: 'f3', label: '🚑 ART', type: 'leaf', apiKey: 'ans_art' },
-                { id: 'f4', label: '💰 Cobro', type: 'leaf', apiKey: 'ans_rec' }
-            ]}
-        };
+    const CONTENT = {
+        ans_vacas: `<strong>📅 Días de Vacaciones:</strong><br>• < 5 años: 14 días<br>• 5-10 años: 21 días<br>• 10-20 años: 28 días<br>• > 20 años: 35 días.<br><br><i>* Se cuentan días corridos.</i>`,
+        info_arts: `<strong>📑 Artículos Comunes:</strong><br>• Art 1: Asuntos Particulares<br>• Art 2: Familiar Enfermo<br>• Art 3: Donación de Sangre<br>• Art 4: Fallecimiento<br>• Art 5: Cuidado de Hijo`,
+        med_info: `<strong>🏥 Medicina Laboral:</strong><br>📍 Dorrego y Bolivar.<br>📞 <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br><b>Docentes:</b> Lun-Mié 7:30 a 9:00.<br><b>Municipales:</b> Lun 14-16:30, Mar/Jue 9-11, Mié/Vie 10-12:30.`,
+        intranet: `Accede a tus recibos aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`
+    };
 
-        let userName = localStorage.getItem('hr_user_name') || "";
-        let currentPath = ['main'];
+    const MENUS = {
+        main: { title: "Hola, ¿qué trámite deseas realizar?", options: [
+            { id: 'recibos', label: '📄 Recibos y Claves' },
+            { id: 'licencias', label: '📝 Licencias y Art.' },
+            { id: 'medicina', label: '🏥 Medicina Laboral' },
+            { id: 'faq', label: '❓ Preguntas Frecuentes' },
+            { id: 'contacto', label: '👤 Operador RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
+        ]},
+        recibos: { title: "Gestión de Recibos:", back: true, options: [
+            { id: 'link_intra', label: '🌐 Ver Recibos', content: CONTENT.intranet },
+            { id: 'key_help', label: '🔑 Ayuda con Clave', content: "Para resetear tu clave de Intranet, por favor envía tu Nombre, Apellido y Legajo a nuestro operador." }
+        ]},
+        licencias: { title: "Solicitud de Licencias:", back: true, options: [
+            { id: 'f_vaca', label: '🏖️ Pedir Vacaciones', form: 'vacaciones' },
+            { id: 'f_art', label: '📑 Pedir Artículo', form: 'articulos' },
+            { id: 'info_art_list', label: 'ℹ️ Info de Artículos', content: CONTENT.info_arts }
+        ]},
+        medicina: { title: "Medicina Laboral:", back: true, options: [
+            { id: 'h_med', label: '⏰ Horarios y Dirección', content: CONTENT.med_info }
+        ]},
+        faq: { title: "Preguntas Frecuentes:", back: true, options: [
+            { id: 'q_vaca', label: '📅 ¿Cuántos días me tocan?', content: CONTENT.ans_vacas },
+            { id: 'q_pago', label: '💰 ¿Cuándo cobro?', content: "El sueldo se deposita habitualmente el 2do día hábil del mes. Horas extras entre el 15 y el 20." },
+            { id: 'q_art', label: '🚑 Accidente (ART)', content: "1. Avisar a jefe inmediato.<br>2. Llamar a la ART.<br>3. Presentar denuncia en RRHH antes de las 24hs." }
+        ]}
+    };
 
-        function toggleInput(show) {
-            const bar = document.getElementById('inputBar');
-            const chat = document.getElementById('chatMessages');
-            if(show) { bar.classList.add('show'); chat.classList.add('with-input'); } 
-            else { bar.classList.remove('show'); chat.classList.remove('with-input'); }
+    let userName = localStorage.getItem('user_name') || "";
+
+    function toggleInput(show) {
+        const bar = document.getElementById('inputBar');
+        const chat = document.getElementById('chatMessages');
+        if (show) {
+            bar.classList.add('show');
+            chat.classList.add('with-input');
+        } else {
+            bar.classList.remove('show');
+            chat.classList.remove('with-input');
         }
+    }
 
-        window.onload = () => {
-            if (!userName) {
-                toggleInput(true);
-                addBotMessage("Bienvenido. Ingresá tu <b>Nombre y Legajo</b>:");
-            } else {
-                addBotMessage(`Hola, <b>${userName}</b>.`);
-                renderMenu();
-            }
-        };
+    function addMessage(text, side = 'bot', options = null) {
+        const container = document.getElementById('chatMessages');
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.flexDirection = 'column';
+        row.style.width = '100%';
 
-        function processInput() {
-            const input = document.getElementById('userInput');
-            const val = input.value.trim();
-            if (!val) return;
-            addUserMessage(val);
-            if (!userName) {
-                if (val.length > 5 && /\d/.test(val)) {
-                    userName = val;
-                    localStorage.setItem('hr_user_name', userName);
-                    toggleInput(false);
-                    renderMenu();
-                } else {
-                    addBotMessage("❌ Ingresá Nombre y Legajo (Ej: Juan Perez 1234)");
-                }
-            }
-            input.value = '';
+        const div = document.createElement('div');
+        div.className = `message ${side}`;
+        div.innerHTML = text;
+        row.appendChild(div);
+
+        if (options) {
+            const optDiv = document.createElement('div');
+            optDiv.className = 'options-container';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-button';
+                btn.innerText = opt.label;
+                btn.onclick = () => handleAction(opt);
+                optDiv.appendChild(btn);
+            });
+            row.appendChild(optDiv);
         }
+        
+        container.appendChild(row);
+        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    }
 
-        function handleOption(id, label, type, apiKey, formType) {
-            if (id === 'back') { currentPath = ['main']; renderMenu(); return; }
-            addUserMessage(label);
-            if (type === 'form') renderForm(formType);
-            else if (type === 'leaf') { addBotMessage(responses[apiKey]); setTimeout(renderMenu, 2500); }
-            else { currentPath.push(id); renderMenu(); }
+    function handleAction(opt) {
+        if (opt.link) return window.open(opt.link);
+        addMessage(opt.label, 'user');
+        
+        if (opt.content) {
+            addMessage(opt.content);
+            setTimeout(() => showMenu('main'), 3000);
+        } else if (opt.form) {
+            showForm(opt.form);
+        } else if (opt.id === 'back') {
+            showMenu('main');
+        } else if (MENUS[opt.id]) {
+            showMenu(opt.id);
         }
+    }
 
-        function renderMenu() {
-            toggleInput(false);
-            const menu = menus[currentPath[currentPath.length - 1]];
-            let opts = [...menu.options];
-            if (currentPath.length > 1) opts.push({ id: 'back', label: '⬅️ Volver', type: 'nav' });
-            addBotMessage(menu.title, true, opts);
-        }
+    function showMenu(key) {
+        toggleInput(false);
+        const menu = MENUS[key];
+        let opts = [...menu.options];
+        if (menu.back) opts.push({ id: 'back', label: '⬅️ Volver al Inicio' });
+        addMessage(menu.title, 'bot', opts);
+    }
 
-        function renderForm(type) {
-            const formId = `f_${Date.now()}`;
-            const isVaca = type === 'vacaciones';
-            const html = `<div class="form-card" id="${formId}">
-                <strong>${isVaca ? '🏖️ Vacaciones' : '📑 Licencia'}</strong>
-                <label>INICIO</label><input type="date" id="f_date">
-                <label>DETALLE</label>
-                ${isVaca ? '<input type="number" id="f_val" placeholder="Días">' : 
-                `<select id="f_val">
-                    <option>Art 1 (Particular)</option><option>Art 2 (Familiar)</option>
-                    <option>Art 3 (Sangre)</option><option>Art 4 (Fallecimiento)</option>
-                    <option>Art 5 (Hijo)</option><option>Maternidad/Embarazo</option><option>Accidente ART</option>
-                </select>`}
-                <button class="btn-submit" onclick="submitForm('${type}','${formId}')">ENVIAR</button>
-                <button class="btn-cancel" onclick="cancelForm('${formId}')">CANCELAR</button>
+    function showForm(type) {
+        toggleInput(false);
+        const isVaca = type === 'vacaciones';
+        const formHtml = `
+            <div class="form-card">
+                <strong style="display:block;margin-bottom:10px;">📋 Solicitud de ${type.toUpperCase()}</strong>
+                <label>FECHA DE INICIO</label>
+                <input type="date" id="date_input">
+                <label>${isVaca ? 'CANTIDAD DE DÍAS' : 'TIPO DE ARTÍCULO'}</label>
+                ${isVaca ? '<input type="number" id="val_input" placeholder="Ej: 14">' : 
+                '<select id="val_input"><option>Art 1 (Particular)</option><option>Art 2 (Familiar)</option><option>Art 5 (Hijo)</option><option>Lic. Médica</option></select>'}
+                <button class="btn-submit" onclick="sendForm('${type}')">ENVIAR POR WHATSAPP</button>
             </div>`;
-            addBotMessage("Completá los datos:");
-            const div = document.createElement('div'); div.innerHTML = html;
-            document.getElementById('chatMessages').appendChild(div);
-            scrollChat();
+        addMessage(formHtml);
+    }
+
+    function sendForm(type) {
+        const d = document.getElementById('date_input').value;
+        const v = document.getElementById('val_input').value;
+        if(!d || !v) return alert("Por favor, completa todos los campos.");
+        const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Nombre:* ${userName}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
+        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
+    }
+
+    document.getElementById('sendButton').onclick = processInput;
+    document.getElementById('userInput').onkeypress = (e) => { if(e.key === 'Enter') processInput(); };
+
+    function processInput() {
+        const input = document.getElementById('userInput');
+        const val = input.value.trim();
+        if (!val) return;
+        
+        addMessage(val, 'user');
+        if (!userName) {
+            userName = val;
+            localStorage.setItem('user_name', val);
+            addMessage(`Perfecto <b>${userName}</b>, ya podés usar el menú de abajo:`);
+            showMenu('main');
         }
+        input.value = "";
+    }
 
-        function submitForm(type, id) {
-            const c = document.getElementById(id);
-            const d = c.querySelector('#f_date').value;
-            const v = c.querySelector('#f_val').value;
-            if(!d || !v) return alert("Faltan datos");
-            window.open(`https://wa.me/${WHATSAPP_RRHH}?text=${encodeURIComponent(`*SOLICITUD*\n${userName}\nTipo: ${type}\nFecha: ${d}\nDetalle: ${v}`)}`);
-            c.innerHTML = "✅ Solicitud enviada.";
-            setTimeout(renderMenu, 2000);
+    function clearSession() { if(confirm("¿Cerrar sesión?")) { localStorage.clear(); location.reload(); } }
+
+    window.onload = () => {
+        if (!userName) {
+            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Por favor, para comenzar ingresá tu <b>Nombre y Legajo</b>:");
+            toggleInput(true);
+        } else {
+            addMessage(`Hola de nuevo, <b>${userName}</b>.`);
+            showMenu('main');
         }
-
-        function cancelForm(id) { document.getElementById(id).innerHTML = "❌ Cancelado."; setTimeout(renderMenu, 1000); }
-
-        function addBotMessage(t, s, o) {
-            const row = document.createElement('div'); row.className = 'message-row';
-            let h = `<div class="message bot">${t}</div>`;
-            if (o) {
-                h += `<div class="options-container">`;
-                o.forEach(opt => { h += `<button class="option-button" onclick="handleOption('${opt.id}','${opt.label}','${opt.type}','${opt.apiKey}','${opt.formType}')">${opt.label}</button>`; });
-                h += `</div>`;
-            }
-            row.innerHTML = h; document.getElementById('chatMessages').appendChild(row); scrollChat();
-        }
-
-        function addUserMessage(t) {
-            const row = document.createElement('div'); row.className = 'message-row';
-            row.innerHTML = `<div class="message user">${t}</div>`;
-            document.getElementById('chatMessages').appendChild(row); scrollChat();
-        }
-
-        function scrollChat() { 
-            const c = document.getElementById('chatMessages');
-            setTimeout(() => { c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); }, 100);
-        }
-
-        function clearChat() { if(confirm("¿Salir?")) { localStorage.clear(); location.reload(); } }
-        document.getElementById('sendButton').onclick = processInput;
-        document.getElementById('userInput').onkeypress = (e) => { if(e.key === 'Enter') processInput(); };
-    </script>
+    };
+</script>
 </body>
 </html>
