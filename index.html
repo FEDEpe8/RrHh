@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal RRHH Chascomús</title>
+    <meta name="theme-color" content="#004a7c">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    
     <style>
         :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; --gray: #95a5a6; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -60,7 +64,7 @@
             { id: 'licencias', label: '📝 Licencias y Art.' },
             { id: 'medicina', label: '🏥 Medicina Laboral' },
             { id: 'faq', label: '❓ Preguntas Frecuentes' },
-            { id: 'contacto', label: '👤 Operadora RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
+            { id: 'contacto', label: '👤 Operador RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
         ]},
         recibos: { title: "Recibos:", back: true, options: [
             { id: 'link_intra', label: '🌐 Ver Recibos', content: CONTENT.intranet },
@@ -174,21 +178,16 @@
         setTimeout(() => showMenu('main'), 2000);
     }
 
-    // --- SEGURIDAD REFORZADA: REQUIERE TEXTO Y NÚMEROS ---
     function processInput() {
         const input = document.getElementById('userInput');
         const val = input.value.trim();
-        
         if (!userName) {
-            // Verifica que haya letras (nombre) y números (legajo)
             const tieneLetras = /[a-zA-Z]/.test(val);
             const tieneNumeros = /\d/.test(val);
-
             if (!tieneLetras || !tieneNumeros || val.length < 7) {
                 alert("Seguridad: Debes ingresar Nombre, Apellido y Legajo (ej: Juan Perez 1234) para acceder.");
                 return;
             }
-            
             addMessage(val, 'user');
             userName = val;
             localStorage.setItem('user_name', val);
@@ -196,7 +195,6 @@
             showMenu('main');
         } else {
             addMessage(val, 'user');
-            // Aquí podrías procesar otras entradas de texto si fuera necesario
         }
         input.value = "";
     }
@@ -215,6 +213,17 @@
     };
 
     function clearSession() { if(confirm("¿Cerrar sesión?")) { localStorage.clear(); location.reload(); } }
+
+    // REGISTRO DE SERVICE WORKER PARA INSTALACIÓN COMO APP
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').then(reg => {
+                console.log('SW registrado', reg);
+            }).catch(err => {
+                console.log('Error SW', err);
+            });
+        });
+    }
 </script>
 </body>
 </html>
