@@ -52,7 +52,9 @@
     const CONFIG = { whatsapp: "5492241538198", telefonoMedicina: "2241000000" };
 
     const CONTENT = {
-        medicina_completa: `<strong>🏥 Medicina Laboral</strong><br><br>📍 Dorrego esq. Bolivar.<br>📞 <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 Docentes: Lun-Mié 07:30 a 09:00 hs.<br>💼 Municipales: Lun 14-16:30 | Mar-Jue 09-11 | Mié-Vie 10-12:30.`,
+        medicina_completa: `<strong>🏥 Medicina Laboral</strong><br><br>📍 Dorrego esq. Bolivar.<br>📞 <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br>
+        <br> 🍎 Docentes: Lun-Mié de 07:30 a 09:00 hs.
+        <br> 💼 Municipales: Lun de 14:00 a 16:30 hs | Mar-Jue de 09:00 a 11:00 hs| Mié-Vie de 10:00 a 12:30 hs.`,
         intranet: `Accedé aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
         articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• Art 1: Particulares.<br>• Art 2: Familiar Enfermo.<br>• Art 3: Sangre.<br>• Art 4: Fallecimiento.<br>• Art 5: Cuidado de Hijo.<br>• Otros: Maternidad y ART.`,
         vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`
@@ -64,7 +66,7 @@
             { id: 'licencias', label: '📝 Licencias y Art.' },
             { id: 'medicina', label: '🏥 Medicina Laboral' },
             { id: 'faq', label: '❓ Preguntas Frecuentes' },
-            { id: 'contacto', label: '👤 Operador RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
+            { id: 'contacto', label: '👤 Operadora RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
         ]},
         recibos: { title: "Recibos:", back: true, options: [
             { id: 'link_intra', label: '🌐 Ver Recibos', content: CONTENT.intranet },
