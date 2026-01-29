@@ -5,25 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal RRHH Chascomús</title>
     <style>
-        :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; }
+        :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; --error: #e74c3c; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
         header { background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .header-logo { height: 35px; border-radius: 4px; }
-        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
-        .chat-container.with-input { padding-bottom: 90px; }
+        
+        /* Ajuste de scroll y espacio inferior para que nada quede tapado */
+        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 120px; scroll-behavior: smooth; }
+        
         .message { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; animation: fadeIn 0.3s; }
         .bot { background: white; align-self: flex-start; border: 1px solid #ddd; border-bottom-left-radius: 2px; }
         .user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-        .option-button { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 20px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
+        
+        .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; padding-bottom: 10px; }
+        .option-button { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .option-button:active { background: var(--primary); color: white; }
+
         .input-area { position: fixed; bottom: -100px; left: 10px; right: 10px; background: white; padding: 8px; border-radius: 30px; display: flex; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: bottom 0.4s; z-index: 1000; }
         .input-area.show { bottom: 20px; }
+        
         #userInput { flex: 1; border: none; outline: none; padding: 10px 15px; font-size: 16px; background: transparent; }
         #sendButton { background: var(--accent); border: none; padding: 0 20px; border-radius: 20px; font-weight: bold; color: var(--primary); cursor: pointer; }
-        .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; }
+
+        .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
+        
+        .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+        .btn-cancel { background: #95a5a6; color: white; border: none; width: 100%; padding: 8px; border-radius: 5px; font-weight: normal; cursor: pointer; font-size: 0.8rem; }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -51,34 +62,14 @@
     };
 
     const CONTENT = {
-        medicina_completa: `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>
-            📍 <b>Dirección:</b> Dorrego esq. Bolivar.<br>
-            📞 <b>Teléfono:</b> <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>
-            🍎 <b>Docentes:</b><br>
-            Lun, Mar y Mié: 07:30 a 09:00 hs.<br><br>
-            💼 <b>Municipales (No Docentes):</b><br>
-            • Lunes: 14:00 a 16:30 hs.<br>
-            • Martes y Jueves: 09:00 a 11:00 hs.<br>
-            • Miércoles y Viernes: 10:00 a 12:30 hs.`,
-            
-        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>
-            • <b>Art 1:</b> Asuntos Particulares (6 al año, máx 2 por mes).<br>
-            • <b>Art 2:</b> Atención Familiar Enfermo.<br>
-            • <b>Art 3:</b> Donación de Sangre.<br>
-            • <b>Art 4:</b> Fallecimiento (Familiar directo).<br>
-            • <b>Art 5:</b> Cuidado de Hijo.<br>
-            • <b>Otros:</b> Maternidad, Pre-natal y Accidente ART.`,
-            
+        medicina_completa: `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 <b>Dirección:</b> Dorrego esq. Bolivar.<br>📞 <b>Teléfono:</b> <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 <b>Docentes:</b><br>Lun, Mar y Mié: 07:30 a 09:00 hs.<br><br>💼 <b>Municipales:</b><br>• Lun: 14:00-16:30 | Mar y Jue: 09:00-11:00 | Mié y Vie: 10:00-12:30.`,
+        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• <b>Art 1:</b> Particulares (6/año).<br>• <b>Art 2:</b> Familiar Enfermo.<br>• <b>Art 3:</b> Sangre.<br>• <b>Art 4:</b> Fallecimiento.<br>• <b>Art 5:</b> Cuidado de Hijo.`,
         intranet: `Accedé a tus recibos aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
-        vacas_tabla: `<strong>📅 Vacaciones según Antigüedad:</strong><br><br>
-            • Menor a 5 años: 14 días.<br>
-            • Desde 5 a 10 años: 21 días.<br>
-            • Desde 10 a 20 años: 28 días.<br>
-            • Mas de 20 años: 35 días.<br><br><i>* Antigüedad computada al 31 de diciembre.</i>`
+        vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`
     };
 
     const MENUS = {
-        main: { title: "Hola, ¿en qué puedo ayudarte hoy?", options: [
+        main: { title: "Hola, ¿qué trámite necesitás realizar?", options: [
             { id: 'recibos', label: '📄 Recibos y Claves' },
             { id: 'licencias', label: '📝 Licencias y Art.' },
             { id: 'medicina', label: '🏥 Medicina Laboral' },
@@ -87,30 +78,26 @@
         ]},
         recibos: { title: "Gestión de Recibos:", back: true, options: [
             { id: 'link_intra', label: '🌐 Ver Recibos', content: CONTENT.intranet },
-            { id: 'key_help', label: '🔑 Ayuda con Clave', content: "Para resetear tu clave, por favor envía tu Nombre y Legajo al operador." }
+            { id: 'key_help', label: '🔑 Ayuda con Clave', content: "Para resetear tu clave, envía Nombre y Legajo al operador." }
         ]},
         licencias: { title: "Solicitud de Licencias:", back: true, options: [
             { id: 'f_vaca', label: '🏖️ Pedir Vacaciones', form: 'vacaciones' },
             { id: 'f_art', label: '📑 Pedir Artículo', form: 'articulos' },
-            { id: 'info_art_list', label: 'ℹ️ Ver Lista de Art.', content: CONTENT.articulos_info }
+            { id: 'info_art_list', label: 'ℹ️ Lista de Artículos', content: CONTENT.articulos_info }
         ]},
         medicina: { title: "Medicina Laboral:", back: true, options: [
             { id: 'h_med', label: '⏰ Horarios y Dirección', content: CONTENT.medicina_completa }
         ]},
         faq: { title: "Preguntas Frecuentes:", back: true, options: [
             { id: 'q_vaca', label: '📅 Días de Vacaciones', content: CONTENT.vacas_tabla },
-            { id: 'q_pago', label: '💰 Fecha de Cobro', content: "Sueldos: 2do día hábil. Extras: entre el 15 y 20." },
-            { id: 'q_art', label: '🚑 Accidente (ART)', content: "1. Avisar a jefe.<br>2. Llamar ART.<br>3. Denuncia en RRHH < 24hs." }
+            { id: 'q_pago', label: '💰 Fecha de Cobro', content: "Sueldos: 2do día hábil. Extras: entre el 15 y 20." }
         ]}
     };
 
     let userName = localStorage.getItem('user_name') || "";
 
     function toggleInput(show) {
-        const bar = document.getElementById('inputBar');
-        const chat = document.getElementById('chatMessages');
-        if (show) { bar.classList.add('show'); chat.classList.add('with-input'); } 
-        else { bar.classList.remove('show'); chat.classList.remove('with-input'); }
+        document.getElementById('inputBar').classList.toggle('show', show);
     }
 
     function addMessage(text, side = 'bot', options = null) {
@@ -138,7 +125,9 @@
             row.appendChild(optDiv);
         }
         container.appendChild(row);
-        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        
+        // Scroll forzado al final
+        setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
     }
 
     function handleAction(opt) {
@@ -146,7 +135,7 @@
         addMessage(opt.label, 'user');
         if (opt.content) {
             addMessage(opt.content);
-            setTimeout(() => showMenu('main'), 3500);
+            setTimeout(() => showMenu('main'), 3000);
         } else if (opt.form) {
             showForm(opt.form);
         } else if (opt.id === 'back') {
@@ -160,7 +149,7 @@
         toggleInput(false);
         const menu = MENUS[key];
         let opts = [...menu.options];
-        if (menu.back) opts.push({ id: 'back', label: '⬅️ Volver' });
+        if (menu.back) opts.push({ id: 'back', label: '⬅️ Volver al Inicio' });
         addMessage(menu.title, 'bot', opts);
     }
 
@@ -179,10 +168,9 @@
                     <option>Art 3 (Sangre)</option>
                     <option>Art 4 (Fallecimiento)</option>
                     <option>Art 5 (Hijo)</option>
-                    <option>Maternidad / Embarazo</option>
-                    <option>Accidente ART</option>
                 </select>`}
                 <button class="btn-submit" onclick="sendForm('${type}')">ENVIAR WHATSAPP</button>
+                <button class="btn-cancel" onclick="showMenu('main')">CANCELAR Y VOLVER</button>
             </div>`;
         addMessage(formHtml);
     }
@@ -190,7 +178,7 @@
     function sendForm(type) {
         const d = document.getElementById('date_input').value;
         const v = document.getElementById('val_input').value;
-        if(!d || !v) return alert("Completa todos los campos");
+        if(!d || !v) return alert("Completa los datos");
         const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Nombre:* ${userName}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
         window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
     }
@@ -203,7 +191,7 @@
         if (!userName) {
             userName = val;
             localStorage.setItem('user_name', val);
-            addMessage(`Entendido <b>${userName}</b>. ¿Qué trámite necesitás?`);
+            addMessage(`Entendido <b>${userName}</b>.`);
             showMenu('main');
         }
         input.value = "";
@@ -214,7 +202,7 @@
 
     window.onload = () => {
         if (!userName) {
-            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Por favor, ingresá tu <b>Nombre y Legajo</b>:");
+            addMessage("Bienvenido al <b>Portal RRHH</b>.<br>Ingresá tu <b>Nombre y Legajo</b>:");
             toggleInput(true);
         } else {
             addMessage(`Hola, <b>${userName}</b>.`);
