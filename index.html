@@ -181,7 +181,7 @@
             }
         }
 
-        function renderForm(type) {
+    function renderForm(type) {
     const formId = `f_${Date.now()}`;
     const isVaca = type === 'vacaciones';
     const html = `
@@ -194,7 +194,9 @@
                 `<select id="f_val">
                     <option>Art 1 (Asuntos Particulares)</option>
                     <option>Art 2 (Familiar Enfermo)</option>
+                    <option>Art 3 (Donación de Sangre)</option>
                     <option>Art 4 (Fallecimiento)</option>
+                    <option>Art 5 (Cuidado de Hijo)</option>
                     <option>Maternidad / Embarazo</option>
                     <option>Accidente Laboral (ART)</option>
                     <option>Examen / Estudio</option>
