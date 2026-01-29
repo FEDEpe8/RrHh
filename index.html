@@ -93,7 +93,16 @@
         };
 
         const responses = {
-            'info_arts': `<strong>📑 Artículos Disponibles:</strong><br><br>• <b>Art 1:</b> Asuntos Particulares.<br>• <b>Art 2:</b> Familiar Enfermo.<br>• <b>Art 3:</b> Donación de Sangre.<br>• <b>Art 4:</b> Fallecimiento Familiar.<br>• <b>Art 5:</b> Cuidado de hijo.`,
+            'info_arts': `<strong>📑 Artículos y Licencias Disponibles:</strong><br><br>
+               • <b>Art 1:</b> Asuntos Particulares.<br>
+               • <b>Art 2:</b> Familiar Enfermo.<br>
+               • <b>Art 3:</b> Donación de Sangre.<br>
+               • <b>Art 4:</b> Fallecimiento de Familiar.<br>
+               • <b>Art 5:</b> Cuidado de Hijo.<br>
+               • <b>Maternidad:</b> Licencia por nacimiento.<br>
+               • <b>Embarazo:</b> Licencia pre-natal / Riesgo.<br>
+               • <b>Accidente:</b> Licencia por accidente laboral (ART).<br>
+               • <b>Estudio:</b> Licencia por examen/capacitación.`,
             'intranet_link': `Accedé a tus recibos en la Intranet oficial:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 Ir a la Intranet</a>`,
             'ayuda_clave': `<strong>🔑 ¿Problemas para ingresar?</strong><br><br>Por favor, comunícate con un operador e indicá tu Nombre completo y Legajo para resetear tu clave.`,
             'med_info': `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 Calle Dorrego esq. Bolivar.<br>📞 Tel: <a href="tel:${TEL_MEDICINA}">${TEL_MEDICINA}</a><br><br><b>Docentes:</b> Lun, Mar y Mié: 07:30 a 09:00 hs.<br><b>No Docentes:</b> Consultar según el día de la semana.`,
@@ -173,33 +182,40 @@
         }
 
         function renderForm(type) {
-            const formId = `f_${Date.now()}`;
-            const isVaca = type === 'vacaciones';
-            const html = `
-                <div class="form-card" id="${formId}">
-                    <strong>${isVaca ? '🏖️ Solicitud Vacaciones' : '📑 Otros Artículos'}</strong>
-                    <label>FECHA INICIO</label><input type="date" id="f_date">
-                    <label>${isVaca ? 'CANTIDAD DÍAS' : 'SELECCIONAR ARTÍCULO'}</label>
-                    ${isVaca ? 
-                        '<input type="number" id="f_val" placeholder="Ej: 14">' : 
-                        '<select id="f_val"><option>Art 1 (Asuntos Particulares)</option><option>Art 2 (Familiar Enfermo)</option><option>Art 4 (Fallecimiento)</option><option>Examen/Estudio</option></select>'}
-                    <div class="form-actions">
-                        <button class="btn-submit" onclick="submitForm('${type}', '${formId}')">ENVIAR</button>
-                        <button class="btn-cancel" onclick="cancelForm('${formId}')">CANCELAR</button>
-                    </div>
-                </div>`;
-            addBotMessage("Por favor, completá los datos del formulario:");
-            const div = document.createElement('div');
-            div.innerHTML = html;
-            document.getElementById('chatMessages').appendChild(div);
-            scrollChat();
-        }
+    const formId = `f_${Date.now()}`;
+    const isVaca = type === 'vacaciones';
+    const html = `
+        <div class="form-card" id="${formId}">
+            <strong>${isVaca ? '🏖️ Solicitud Vacaciones' : '📑 Licencia/Artículos'}</strong>
+            <label>FECHA INICIO</label><input type="date" id="f_date">
+            <label>${isVaca ? 'CANTIDAD DÍAS' : 'SELECCIONAR TIPO'}</label>
+            ${isVaca ? 
+                '<input type="number" id="f_val" placeholder="Ej: 14">' : 
+                `<select id="f_val">
+                    <option>Art 1 (Asuntos Particulares)</option>
+                    <option>Art 2 (Familiar Enfermo)</option>
+                    <option>Art 4 (Fallecimiento)</option>
+                    <option>Maternidad / Embarazo</option>
+                    <option>Accidente Laboral (ART)</option>
+                    <option>Examen / Estudio</option>
+                </select>`}
+            <div class="form-actions">
+                <button class="btn-submit" onclick="submitForm('${type}', '${formId}')">ENVIAR</button>
+                <button class="btn-cancel" onclick="cancelForm('${formId}')">CANCELAR</button>
+            </div>
+        </div>`;
+    addBotMessage("Por favor, completá los datos:");
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    document.getElementById('chatMessages').appendChild(div);
+    scrollChat();
+}
 
-        function cancelForm(id) {
-            const card = document.getElementById(id);
-            card.innerHTML = "<small><i>❌ Formulario cancelado.</i></small>";
-            setTimeout(renderMenu, 1000);
-        }
+function cancelForm(id) {
+    const card = document.getElementById(id);
+    card.innerHTML = "<small><i>❌ Formulario cancelado por el usuario.</i></small>";
+    setTimeout(renderMenu, 1000);
+}
 
         function submitForm(type, formId) {
             const container = document.getElementById(formId);
