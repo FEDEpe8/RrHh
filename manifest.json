@@ -10,13 +10,13 @@
     {
       "src": "logo.jpg",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/jpg",
       "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/912/912214.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/912/912214.jpg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpg",
       "purpose": "maskable"
     }
   ]
