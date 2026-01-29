@@ -261,9 +261,15 @@
         }
 
         function scrollChat() { 
-            const c = document.getElementById('chatMessages'); 
-            c.scrollTop = c.scrollHeight; 
-        }
+    const c = document.getElementById('chatMessages');
+    // Forzamos el scroll al final con un pequeño delay para esperar a que los botones se rendericen
+    setTimeout(() => {
+        c.scrollTo({
+            top: c.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 100);
+}
         
         function clearChat() { 
             if(confirm("¿Cerrar sesión y salir?")) { 
