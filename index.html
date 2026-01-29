@@ -7,33 +7,23 @@
     <style>
         :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; --gray: #95a5a6; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
         header { background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .header-logo { height: 35px; border-radius: 4px; }
-        
         .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 110px; scroll-behavior: smooth; }
-        
         .message { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; animation: fadeIn 0.3s; }
         .bot { background: white; align-self: flex-start; border: 1px solid #ddd; border-bottom-left-radius: 2px; }
         .user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        
         .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
         .option-button { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
-        .option-button:active { background: var(--primary); color: white; }
-
         .input-area { position: fixed; bottom: -100px; left: 10px; right: 10px; background: white; padding: 8px; border-radius: 30px; display: flex; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: bottom 0.4s; z-index: 1000; }
         .input-area.show { bottom: 20px; }
-        
         #userInput { flex: 1; border: none; outline: none; padding: 10px 15px; font-size: 16px; background: transparent; }
         #sendButton { background: var(--accent); border: none; padding: 0 20px; border-radius: 20px; font-weight: bold; color: var(--primary); cursor: pointer; }
-
         .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; }
         label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; }
         input, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        
         .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
         .btn-cancel { background: var(--gray); color: white; border: none; width: 100%; padding: 8px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -50,21 +40,18 @@
 <main id="chatMessages" class="chat-container"></main>
 
 <footer id="inputBar" class="input-area">
-    <input type="text" id="userInput" placeholder="Escribe tu Nombre y Legajo..." autocomplete="off">
+    <input type="text" id="userInput" placeholder="Nombre, Apellido y Legajo..." autocomplete="off">
     <button id="sendButton">Enviar</button>
 </footer>
 
 <script>
-    const CONFIG = {
-        whatsapp: "5492241538198",
-        telefonoMedicina: "2241000000"
-    };
+    const CONFIG = { whatsapp: "5492241538198", telefonoMedicina: "2241000000" };
 
     const CONTENT = {
-        medicina_completa: `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 <b>Dirección:</b> Dorrego esq. Bolivar.<br>📞 <b>Teléfono:</b> <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 <b>Docentes:</b> Lun-Mié 07:30 a 09:00 hs.<br>💼 <b>Municipales:</b> Lun 14-16:30 | Mar-Jue 09-11 | Mié-Vie 10-12:30.`,
-        intranet: `Accedé a tus recibos aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
-        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• <b>Art 1:</b> Asuntos Particulares (6 al año).<br>• <b>Art 2:</b> Atención Familiar Enfermo.<br>• <b>Art 3:</b> Donación de Sangre.<br>• <b>Art 4:</b> Fallecimiento.<br>• <b>Art 5:</b> Cuidado de Hijo.<br>• <b>Otros:</b> Maternidad y Accidente ART.`,
-        vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• Menos de 5 años: 14 días.<br>• De 5-10 años: 21 días.<br>• De 10-20 años: 28 días.<br>• Mas de 20 años: 35 días.`
+        medicina_completa: `<strong>🏥 Medicina Laboral</strong><br><br>📍 Dorrego esq. Bolivar.<br>📞 <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 Docentes: Lun-Mié 07:30 a 09:00 hs.<br>💼 Municipales: Lun 14-16:30 | Mar-Jue 09-11 | Mié-Vie 10-12:30.`,
+        intranet: `Accedé aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
+        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• Art 1: Particulares.<br>• Art 2: Familiar Enfermo.<br>• Art 3: Sangre.<br>• Art 4: Fallecimiento.<br>• Art 5: Cuidado de Hijo.<br>• Otros: Maternidad y ART.`,
+        vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`
     };
 
     const MENUS = {
@@ -75,31 +62,29 @@
             { id: 'faq', label: '❓ Preguntas Frecuentes' },
             { id: 'contacto', label: '👤 Operador RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
         ]},
-        recibos: { title: "Gestión de Recibos:", back: true, options: [
+        recibos: { title: "Recibos:", back: true, options: [
             { id: 'link_intra', label: '🌐 Ver Recibos', content: CONTENT.intranet },
-            { id: 'key_help', label: '🔑 Ayuda con Clave', content: "Para resetear tu clave, envía Nombre y Legajo al operador." }
+            { id: 'key_help', label: '🔑 Ayuda con Clave', content: "Envía Nombre y Legajo al operador para resetear." }
         ]},
-        licencias: { title: "Solicitud de Licencias:", back: true, options: [
+        licencias: { title: "Licencias:", back: true, options: [
             { id: 'f_vaca', label: '🏖️ Pedir Vacaciones', form: 'vacaciones' },
             { id: 'f_art', label: '📑 Pedir Artículo', form: 'articulos' },
             { id: 'info_art_list', label: 'ℹ️ Info de Artículos', content: CONTENT.articulos_info }
         ]},
-        medicina: { title: "Medicina Laboral:", back: true, options: [
+        medicina: { title: "Medicina:", back: true, options: [
             { id: 'h_med', label: '⏰ Horarios y Dirección', content: CONTENT.medicina_completa }
         ]},
         faq: { title: "Preguntas Frecuentes:", back: true, options: [
             { id: 'q_vaca', label: '📅 Días de Vacaciones', content: CONTENT.vacas_tabla },
             { id: 'q_pago', label: '💰 Fecha de Cobro', content: "Sueldos: 2do día hábil. Extras: entre el 15 y 20." },
-            { id: 'q_art', label: '🚑 Accidente laboral', content: "Como proceder ante un Accidente laboral. Avisar a su superio, llamar al numero de la ART." },
-            { id: 'q_cert', label: '🚑 Entrega del Certificado ', content: "En Medicina Laboral, en el plazo de 48hs habiles en la oficina de Dorrego y Bolivar" }
+            { id: 'q_art', label: '🚑 Accidente laboral', content: "Avisar a superior y llamar a la ART." },
+            { id: 'q_cert', label: '🚑 Certificados', content: "Entregar en Medicina Laboral (Dorrego y Bolivar) dentro de las 48hs." }
         ]}
     };
 
     let userName = localStorage.getItem('user_name') || "";
 
-    function toggleInput(show) {
-        document.getElementById('inputBar').classList.toggle('show', show);
-    }
+    function toggleInput(show) { document.getElementById('inputBar').classList.toggle('show', show); }
 
     function addMessage(text, side = 'bot', options = null) {
         const container = document.getElementById('chatMessages');
@@ -146,7 +131,7 @@
         toggleInput(false);
         const menu = MENUS[key];
         let opts = [...menu.options];
-        if (menu.back) opts.push({ id: 'back', label: '⬅️ Volver al Inicio' });
+        if (menu.back) opts.push({ id: 'back', label: '⬅️ Volver' });
         addMessage(menu.title, 'bot', opts);
     }
 
@@ -182,30 +167,36 @@
     function sendForm(type) {
         const d = document.getElementById('date_input').value;
         const v = document.getElementById('val_input').value;
-        if(!d || !v) return alert("Completa todos los campos");
-        const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Nombre:* ${userName}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
+        if(!d || !v) return alert("Completa los datos");
+        const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Usuario:* ${userName}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
         window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
         addMessage("✅ Solicitud enviada.", 'bot');
         setTimeout(() => showMenu('main'), 2000);
     }
 
-    // SEGURIDAD: Solo permite avanzar si se escribe algo válido
+    // --- SEGURIDAD REFORZADA: REQUIERE TEXTO Y NÚMEROS ---
     function processInput() {
         const input = document.getElementById('userInput');
         const val = input.value.trim();
         
-        if (val.length < 3) {
-            alert("Por favor, ingresa tu Nombre y Legajo para continuar.");
-            return;
-        }
-
-        addMessage(val, 'user');
-        
         if (!userName) {
+            // Verifica que haya letras (nombre) y números (legajo)
+            const tieneLetras = /[a-zA-Z]/.test(val);
+            const tieneNumeros = /\d/.test(val);
+
+            if (!tieneLetras || !tieneNumeros || val.length < 7) {
+                alert("Seguridad: Debes ingresar Nombre, Apellido y Legajo (ej: Juan Perez 1234) para acceder.");
+                return;
+            }
+            
+            addMessage(val, 'user');
             userName = val;
             localStorage.setItem('user_name', val);
-            addMessage(`Entendido <b>${userName}</b>, acceso concedido.`);
+            addMessage(`Acceso concedido <b>${userName}</b>.`);
             showMenu('main');
+        } else {
+            addMessage(val, 'user');
+            // Aquí podrías procesar otras entradas de texto si fuera necesario
         }
         input.value = "";
     }
@@ -215,10 +206,10 @@
 
     window.onload = () => {
         if (!userName) {
-            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Por favor, ingresá tu <b>Nombre y Legajo</b>:");
+            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Por seguridad, ingresá tu <b>Nombre, Apellido y Legajo</b>:");
             toggleInput(true);
         } else {
-            addMessage(`Hola, <b>${userName}</b>.`);
+            addMessage(`Hola de nuevo, <b>${userName}</b>.`);
             showMenu('main');
         }
     };
