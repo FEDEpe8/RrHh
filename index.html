@@ -5,21 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal RRHH Chascomús</title>
     <style>
-        :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; --error: #e74c3c; }
+        :root { --primary: #004a7c; --accent: #97d700; --bg: #f4f7f6; --gray: #95a5a6; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
         header { background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .header-logo { height: 35px; border-radius: 4px; }
         
-        /* Ajuste de scroll y espacio inferior para que nada quede tapado */
-        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 120px; scroll-behavior: smooth; }
+        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 110px; scroll-behavior: smooth; }
         
         .message { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; animation: fadeIn 0.3s; }
         .bot { background: white; align-self: flex-start; border: 1px solid #ddd; border-bottom-left-radius: 2px; }
         .user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         
-        .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; padding-bottom: 10px; }
-        .option-button { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .option-button { background: white; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
         .option-button:active { background: var(--primary); color: white; }
 
         .input-area { position: fixed; bottom: -100px; left: 10px; right: 10px; background: white; padding: 8px; border-radius: 30px; display: flex; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: bottom 0.4s; z-index: 1000; }
@@ -28,12 +27,12 @@
         #userInput { flex: 1; border: none; outline: none; padding: 10px 15px; font-size: 16px; background: transparent; }
         #sendButton { background: var(--accent); border: none; padding: 0 20px; border-radius: 20px; font-weight: bold; color: var(--primary); cursor: pointer; }
 
-        .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; }
         label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         
         .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
-        .btn-cancel { background: #95a5a6; color: white; border: none; width: 100%; padding: 8px; border-radius: 5px; font-weight: normal; cursor: pointer; font-size: 0.8rem; }
+        .btn-cancel { background: var(--gray); color: white; border: none; width: 100%; padding: 8px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -43,7 +42,7 @@
 <header>
     <div style="display:flex; align-items:center; gap:10px;">
         <img src="logo.jpg" class="header-logo" onerror="this.style.display='none'">
-        <span style="font-weight:bold; font-size:0.9rem;">Portal RRHH Chascomús</span>
+        <span style="font-weight:bold; font-size:0.9rem;">RRHH Chascomús</span>
     </div>
     <button onclick="clearSession()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:4px; padding:5px 10px; font-size:0.7rem;">Salir</button>
 </header>
@@ -51,7 +50,7 @@
 <main id="chatMessages" class="chat-container"></main>
 
 <footer id="inputBar" class="input-area">
-    <input type="text" id="userInput" placeholder="Escribe aquí..." autocomplete="off">
+    <input type="text" id="userInput" placeholder="Escribe tu Nombre y Legajo..." autocomplete="off">
     <button id="sendButton">Enviar</button>
 </footer>
 
@@ -62,9 +61,9 @@
     };
 
     const CONTENT = {
-        medicina_completa: `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 <b>Dirección:</b> Dorrego esq. Bolivar.<br>📞 <b>Teléfono:</b> <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 <b>Docentes:</b><br>Lun, Mar y Mié: 07:30 a 09:00 hs.<br><br>💼 <b>Municipales:</b><br>• Lun: 14:00-16:30 | Mar y Jue: 09:00-11:00 | Mié y Vie: 10:00-12:30.`,
-        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• <b>Art 1:</b> Particulares (6/año).<br>• <b>Art 2:</b> Familiar Enfermo.<br>• <b>Art 3:</b> Sangre.<br>• <b>Art 4:</b> Fallecimiento.<br>• <b>Art 5:</b> Cuidado de Hijo.`,
-        intranet: `Accedé a tus recibos aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
+        medicina_completa: `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 <b>Dirección:</b> Dorrego esq. Bolivar.<br>📞 <b>Teléfono:</b> <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 <b>Docentes:</b> Lun-Mié 07:30 a 09:00 hs.<br>💼 <b>Municipales:</b> Lun 14-16:30 | Mar-Jue 09-11 | Mié-Vie 10-12:30.`,
+        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• <b>Art 1:</b> Particular (6/año).<br>• <b>Art 2:</b> Familiar Enfermo.<br>• <b>Art 3:</b> Sangre.<br>• <b>Art 4:</b> Fallecimiento.<br>• <b>Art 5:</b> Cuidado de Hijo.`,
+        intranet: `Accedé aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
         vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`
     };
 
@@ -83,7 +82,7 @@
         licencias: { title: "Solicitud de Licencias:", back: true, options: [
             { id: 'f_vaca', label: '🏖️ Pedir Vacaciones', form: 'vacaciones' },
             { id: 'f_art', label: '📑 Pedir Artículo', form: 'articulos' },
-            { id: 'info_art_list', label: 'ℹ️ Lista de Artículos', content: CONTENT.articulos_info }
+            { id: 'info_art_list', label: 'ℹ️ Info de Artículos', content: CONTENT.articulos_info }
         ]},
         medicina: { title: "Medicina Laboral:", back: true, options: [
             { id: 'h_med', label: '⏰ Horarios y Dirección', content: CONTENT.medicina_completa }
@@ -125,8 +124,6 @@
             row.appendChild(optDiv);
         }
         container.appendChild(row);
-        
-        // Scroll forzado al final
         setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
     }
 
@@ -135,7 +132,7 @@
         addMessage(opt.label, 'user');
         if (opt.content) {
             addMessage(opt.content);
-            setTimeout(() => showMenu('main'), 3000);
+            setTimeout(() => showMenu('main'), 2500);
         } else if (opt.form) {
             showForm(opt.form);
         } else if (opt.id === 'back') {
@@ -170,17 +167,24 @@
                     <option>Art 5 (Hijo)</option>
                 </select>`}
                 <button class="btn-submit" onclick="sendForm('${type}')">ENVIAR WHATSAPP</button>
-                <button class="btn-cancel" onclick="showMenu('main')">CANCELAR Y VOLVER</button>
+                <button class="btn-cancel" onclick="cancelForm()">❌ CANCELAR Y VOLVER</button>
             </div>`;
         addMessage(formHtml);
+    }
+
+    function cancelForm() {
+        addMessage("Solicitud cancelada.", 'bot');
+        setTimeout(() => showMenu('main'), 1000);
     }
 
     function sendForm(type) {
         const d = document.getElementById('date_input').value;
         const v = document.getElementById('val_input').value;
-        if(!d || !v) return alert("Completa los datos");
+        if(!d || !v) return alert("Completa todos los campos");
         const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Nombre:* ${userName}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
         window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
+        addMessage("✅ Solicitud enviada.", 'bot');
+        setTimeout(() => showMenu('main'), 2000);
     }
 
     function processInput() {
@@ -202,7 +206,7 @@
 
     window.onload = () => {
         if (!userName) {
-            addMessage("Bienvenido al <b>Portal RRHH</b>.<br>Ingresá tu <b>Nombre y Legajo</b>:");
+            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Por favor, ingresá tu <b>Nombre y Legajo</b>:");
             toggleInput(true);
         } else {
             addMessage(`Hola, <b>${userName}</b>.`);
