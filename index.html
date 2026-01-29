@@ -92,26 +92,38 @@
             ]}
         };
 
-        const responses = {
-            'info_arts': `<strong>📑 Artículos y Licencias Disponibles:</strong><br><br>
-               • <b>Art 1:</b> Asuntos Particulares.<br>
-               • <b>Art 2:</b> Familiar Enfermo.<br>
-               • <b>Art 3:</b> Donación de Sangre.<br>
-               • <b>Art 4:</b> Fallecimiento de Familiar.<br>
-               • <b>Art 5:</b> Cuidado de Hijo.<br>
-               • <b>Maternidad:</b> Licencia por nacimiento.<br>
-               • <b>Embarazo:</b> Licencia pre-natal / Riesgo.<br>
-               • <b>Accidente:</b> Licencia por accidente laboral (ART).<br>
-               • <b>Estudio:</b> Licencia por examen/capacitación.`,
-            'intranet_link': `Accedé a tus recibos en la Intranet oficial:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 Ir a la Intranet</a>`,
-            'ayuda_clave': `<strong>🔑 ¿Problemas para ingresar?</strong><br><br>Por favor, comunícate con un operador e indicá tu Nombre completo y Legajo para resetear tu clave.`,
-            'med_info': `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 Calle Dorrego esq. Bolivar.<br>📞 Tel: <a href="tel:${TEL_MEDICINA}">${TEL_MEDICINA}</a><br><br><b>Docentes:</b> Lun, Mar y Mié: 07:30 a 09:00 hs.<br><b>No Docentes:</b> Consultar según el día de la semana.`,
-            'ans_vacas': `<strong>📅 Vacaciones según Antigüedad:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`,
-            'ans_cert': `<strong>⏱️ Plazo para certificados:</strong><br><br>Los certificados deben presentarse dentro de las <b>48 horas hábiles</b> de ocurrida la inasistencia.`,
-            'ans_art': `<strong>🚑 Accidente Laboral:</strong><br><br>1. Avisar a tu jefe directo.<br>2. Llamar a la ART.<br>3. Presentar denuncia en RRHH antes de las 24hs.`,
-            'ans_rec': `<strong>📅 Fecha de Cobro:</strong><br><br>Habitualmente el segundo día hábil de cada mes. Las horas extras se abonan entre el 15 y 20 de cada mes.`,
-            'contacto_humano': `Para hablar con un operador de RRHH (Lun a Vie 8-14hs):<br><br><a href="https://wa.me/${WHATSAPP_RRHH}">👉 Abrir WhatsApp</a>`
-        };
+       const responses = {
+    'info_arts': `<strong>📑 Artículos y Licencias Disponibles:</strong><br><br>
+        • <b>Art 1:</b> Asuntos Particulares.<br>
+        • <b>Art 2:</b> Atención Familiar Enfermo.<br>
+        • <b>Art 3:</b> Donación de Sangre.<br>
+        • <b>Art 4:</b> Fallecimiento de Familiar.<br>
+        • <b>Art 5:</b> Cuidado de Hijo.<br>
+        • <b>Maternidad:</b> Licencia por nacimiento.<br>
+        • <b>Embarazo:</b> Licencia pre-natal / Riesgo.<br>
+        • <b>Accidente:</b> Licencia por accidente laboral (ART).<br>
+        • <b>Estudio:</b> Licencia por examen/capacitación.`,
+    
+    'med_info': `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>
+        📍 <b>Dirección:</b> Calle Dorrego esq. Bolivar.<br>
+        📞 <b>Tel:</b> <a href="tel:${TEL_MEDICINA}">${TEL_MEDICINA}</a><br><br>
+        🍎 <b>Personal Docente:</b><br>
+        • Lun, Mar y Mié: 07:30 a 09:00 hs.<br><br>
+        💼 <b>Personal No Docente:</b><br>
+        • Lunes: 14:00 a 16:30 hs.<br>
+        • Martes: 09:00 a 11:00 hs.<br>
+        • Miércoles: 10:00 a 12:30 hs.<br>
+        • Jueves: 09:00 a 11:00 hs.<br>
+        • Viernes: 10:00 a 12:30 hs.`,
+    
+    'intranet_link': `Accedé a tus recibos en la Intranet oficial:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 Ir a la Intranet</a>`,
+    'ayuda_clave': `<strong>🔑 ¿Problemas para ingresar?</strong><br><br>Si no recordás tu clave, hablá con la operadora e incluí Nombre, Apellido y Legajo para resetear tu cuenta.`,
+    'ans_vacas': `<strong>📅 Vacaciones según Antigüedad:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`,
+    'ans_cert': `<strong>⏱️ Plazo para certificados:</strong><br><br>Deben presentarse dentro de las <b>48 horas hábiles</b> de la inasistencia.`,
+    'ans_art': `<strong>🚑 Accidente Laboral:</strong><br><br>1. Avisar al jefe.<br>2. Llamar a la ART.<br>3. Denunciar en RRHH antes de las 24hs.`,
+    'ans_rec': `<strong>📅 Fecha de Cobro:</strong><br><br>Habitualmente el segundo día hábil del mes. Extras entre el 15 y 20.`,
+    'contacto_humano': `Contacto RRHH (Lun a Vie 8-14hs):<br><br><a href="https://wa.me/${WHATSAPP_RRHH}">👉 Chatear con RRHH</a>`
+};
 
         let userName = localStorage.getItem('hr_user_name') || "";
         let currentPath = ['main'];
@@ -181,7 +193,7 @@
             }
         }
 
-    function renderForm(type) {
+  function renderForm(type) {
     const formId = `f_${Date.now()}`;
     const isVaca = type === 'vacaciones';
     const html = `
@@ -206,7 +218,7 @@
                 <button class="btn-cancel" onclick="cancelForm('${formId}')">CANCELAR</button>
             </div>
         </div>`;
-    addBotMessage("Por favor, completá los datos:");
+    addBotMessage("Por favor, completá los datos para enviar a RRHH:");
     const div = document.createElement('div');
     div.innerHTML = html;
     document.getElementById('chatMessages').appendChild(div);
@@ -215,7 +227,7 @@
 
 function cancelForm(id) {
     const card = document.getElementById(id);
-    card.innerHTML = "<small><i>❌ Formulario cancelado por el usuario.</i></small>";
+    card.innerHTML = "<small><i>❌ Formulario cancelado.</i></small>";
     setTimeout(renderMenu, 1000);
 }
 
