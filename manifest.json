@@ -6,19 +6,18 @@
   "display": "standalone",
   "background_color": "#004a7c",
   "theme_color": "#004a7c",
- "icons": [
+  "icons": [
     {
       "src": "logo.jpg",
       "sizes": "512x512",
-      "type": "image/jpeg"
-    }
-  ]
-  [
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/912/912214.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
-
+}
