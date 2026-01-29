@@ -62,9 +62,14 @@
 
     const CONTENT = {
         medicina_completa: `<strong>🏥 Medicina Laboral (Centro Cívico)</strong><br><br>📍 <b>Dirección:</b> Dorrego esq. Bolivar.<br>📞 <b>Teléfono:</b> <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 <b>Docentes:</b> Lun-Mié 07:30 a 09:00 hs.<br>💼 <b>Municipales:</b> Lun 14-16:30 | Mar-Jue 09-11 | Mié-Vie 10-12:30.`,
-        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• <b>Art 1:</b> Particular (6/año).<br>• <b>Art 2:</b> Familiar Enfermo.<br>• <b>Art 3:</b> Sangre.<br>• <b>Art 4:</b> Fallecimiento.<br>• <b>Art 5:</b> Cuidado de Hijo.`,
-        intranet: `Accedé aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
-        vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`
+        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>
+            • <b>Art 1:</b> Asuntos Particulares (6 al año, máx 2 por mes).<br>
+            • <b>Art 2:</b> Atención Familiar Enfermo.<br>
+            • <b>Art 3:</b> Donación de Sangre.<br>
+            • <b>Art 4:</b> Fallecimiento (Familiar directo).<br>
+            • <b>Art 5:</b> Cuidado de Hijo.<br>
+            • <b>Otros:</b> Maternidad, Pre-natal y Accidente ART.`,
+        vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• Menos de 5 años: 14 días.<br>• De 5-10 años: 21 días.<br>• De 10-20 años: 28 días.<br>• Mas de 20 años: 35 días.`
     };
 
     const MENUS = {
@@ -165,6 +170,8 @@
                     <option>Art 3 (Sangre)</option>
                     <option>Art 4 (Fallecimiento)</option>
                     <option>Art 5 (Hijo)</option>
+                    <option>Maternidad / Embarazo</option>
+                    <option>Accidente ART</option>
                 </select>`}
                 <button class="btn-submit" onclick="sendForm('${type}')">ENVIAR WHATSAPP</button>
                 <button class="btn-cancel" onclick="cancelForm()">❌ CANCELAR Y VOLVER</button>
