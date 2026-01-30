@@ -24,9 +24,9 @@
         #userInput { flex: 1; border: none; outline: none; padding: 10px 15px; font-size: 16px; background: transparent; }
         #sendButton { background: var(--accent); border: none; padding: 0 20px; border-radius: 20px; font-weight: bold; color: var(--primary); cursor: pointer; }
         .form-card { background: #eef6fc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); margin-top: 5px; }
-        label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+        label { display: block; font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; margin-top: 8px; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        .btn-submit { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; margin-bottom: 8px; }
         .btn-cancel { background: var(--gray); color: white; border: none; width: 100%; padding: 8px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -49,48 +49,52 @@
 </footer>
 
 <script>
-    const CONFIG = { whatsapp: "5492241538198", telefonoMedicina: "2241000000" };
+    const CONFIG = { 
+        whatsapp: "5492241538198", 
+        telefonoMedicina: "2241000000",
+        gde_url: "https://cas-chascomus.gde.gob.ar/acceso/login/?generateToken=true&generateIDP=true&"
+    };
+
+    const SECRETARIAS = [
+        "Gobierno", "Hacienda", "Salud", "Obras y Servicios", 
+        "Seguridad Ciudadana", "Desarrollo Social", "Cultura, Patrimonio y Educación", 
+        "Turismo y Desarrollo Productivo", "Planificación y Desarrollo Urbano", "Recursos Humanos"
+    ];
 
     const CONTENT = {
-        medicina_completa: `<strong>🏥 Medicina Laboral</strong><br><br>📍 Dorrego esq. Bolivar.<br>📞 <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br>
-        <br> 🍎 Docentes: Lun-Mié de 07:30 a 09:00 hs.
-        <br> 💼 Municipales: Lun de 14:00 a 16:30 hs | Mar-Jue de 09:00 a 11:00 hs| Mié-Vie de 10:00 a 12:30 hs.`,
-        intranet: `Accedé aquí:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank">👉 IR A LA INTRANET</a>`,
-        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• Art 1: Particulares.<br>• Art 2: Familiar Enfermo.<br>• Art 3: Sangre.<br>• Art 4: Fallecimiento.<br>• Art 5: Cuidado de Hijo.<br>• Otros: Maternidad y ART.`,
-        vacas_tabla: `<strong>📅 Vacaciones:</strong><br><br>• < 5 años: 14 días.<br>• 5-10 años: 21 días.<br>• 10-20 años: 28 días.<br>• > 20 años: 35 días.`
+        medicina_completa: `<strong>🏥 Medicina Laboral</strong><br><br>📍 Dorrego esq. Bolivar.<br>📞 <a href="tel:${CONFIG.telefonoMedicina}">${CONFIG.telefonoMedicina}</a><br><br>🍎 Docentes: Lun-Mié de 07:30 a 09:00 hs.<br>💼 Municipales: Lun 14:00-16:30 | Mar-Jue 09:00-11:00 | Mié-Vie 10:00-12:30.`,
+        intranet: `Accedé aquí para ver tus recibos:<br><br><a href="https://intranet.chascomus.gob.ar/" target="_blank" style="color:var(--primary); font-weight:bold;">👉 IR A LA INTRANET</a>`,
+        articulos_info: `<strong>📑 Guía de Artículos:</strong><br><br>• Art 1: Particulares.<br>• Art 2: Familiar Enfermo.<br>• Art 3: Sangre.<br>• Art 4: Fallecimiento.<br>• Art 5: Cuidado de Hijo.`
     };
 
     const MENUS = {
         main: { title: "Hola, ¿qué trámite necesitás realizar?", options: [
-            { id: 'recibos', label: '📄 Recibos y Claves' },
+            { id: 'recibos', label: '📄 Recibos y Legajo GDE' },
             { id: 'licencias', label: '📝 Licencias y Art.' },
             { id: 'medicina', label: '🏥 Medicina Laboral' },
             { id: 'faq', label: '❓ Preguntas Frecuentes' },
             { id: 'contacto', label: '👤 Operadora RRHH', link: `https://wa.me/${CONFIG.whatsapp}` }
         ]},
-        recibos: { title: "Recibos:", back: true, options: [
-            { id: 'link_intra', label: '🌐 Ver Recibos', content: CONTENT.intranet },
-            { id: 'key_help', label: '🔑 Ayuda con Clave', content: "En la opcion '👤 Operadora RRHH' envía Nombre Apellido y Legajo a la operadora para resetear Clave" }
+        recibos: { title: "Acceso a Sistemas:", back: true, options: [
+            { id: 'link_gde', label: '📂 Entrar a GDE (Legajo)', link: CONFIG.gde_url },
+            { id: 'link_intra', label: '🌐 Ver Recibos (Intranet)', content: CONTENT.intranet },
+            { id: 'key_help', label: '🔑 Problemas de Clave', content: "Contactá a la operadora enviando tu Legajo para resetear tus accesos." }
         ]},
-        licencias: { title: "Licencias:", back: true, options: [
+        licencias: { title: "Trámites de Licencia:", back: true, options: [
             { id: 'f_vaca', label: '🏖️ Pedir Vacaciones', form: 'vacaciones' },
             { id: 'f_art', label: '📑 Pedir Artículo', form: 'articulos' },
             { id: 'info_art_list', label: 'ℹ️ Info de Artículos', content: CONTENT.articulos_info }
         ]},
-        medicina: { title: "Medicina:", back: true, options: [
+        medicina: { title: "Información Médica:", back: true, options: [
             { id: 'h_med', label: '⏰ Horarios y Dirección', content: CONTENT.medicina_completa }
         ]},
         faq: { title: "Preguntas Frecuentes:", back: true, options: [
-            { id: 'q_vaca', label: '📅 Días de Vacaciones', content: CONTENT.vacas_tabla },
-            { id: 'q_pago', label: '💰 Fecha de Cobro', content: "Sueldos: 2do día hábil. Extras: entre los dias 15 y 20 de cada mes." },
-            { id: 'q_art', label: '🚑 Accidente laboral', content: "Avisar al superior y llamar a la ART." },
-            { id: 'q_cert', label: '🚑 Certificados', content: "Entregar en Medicina Laboral (Dorrego y Bolivar) dentro de las 48hs." }
+            { id: 'q_pago', label: '💰 Fecha de Cobro', content: "Sueldos: 2do día hábil. Extras: entre los días 15 y 20." },
+            { id: 'q_art', label: '🚑 Accidente laboral', content: "Informar de inmediato al superior y comunicarse con la ART." }
         ]}
     };
 
     let userName = localStorage.getItem('user_name') || "";
-
-    function toggleInput(show) { document.getElementById('inputBar').classList.toggle('show', show); }
 
     function addMessage(text, side = 'bot', options = null) {
         const container = document.getElementById('chatMessages');
@@ -134,7 +138,7 @@
     }
 
     function showMenu(key) {
-        toggleInput(false);
+        document.getElementById('inputBar').classList.remove('show');
         const menu = MENUS[key];
         let opts = [...menu.options];
         if (menu.back) opts.push({ id: 'back', label: '⬅️ Volver' });
@@ -146,23 +150,35 @@
         const formHtml = `
             <div class="form-card">
                 <strong style="display:block;margin-bottom:10px;">📋 Solicitud de ${type.toUpperCase()}</strong>
+                <label>SECRETARÍA (SIBONE)</label>
+                <select id="sec_input">
+                    <option value="">Seleccionar...</option>
+                    ${SECRETARIAS.map(s => `<option>${s}</option>`).join("")}
+                </select>
                 <label>FECHA DE INICIO</label>
                 <input type="date" id="date_input">
                 <label>${isVaca ? 'CANTIDAD DE DÍAS' : 'SELECCIONA ARTÍCULO'}</label>
                 ${isVaca ? '<input type="number" id="val_input" placeholder="Ej: 14">' : 
                 `<select id="val_input">
-                    <option>Art 1 (Particular)</option>
-                    <option>Art 2 (Familiar)</option>
-                    <option>Art 3 (Sangre)</option>
-                    <option>Art 4 (Fallecimiento)</option>
+                    <option>Art 1 (Particular)</option><option>Art 2 (Familiar)</option>
+                    <option>Art 3 (Sangre)</option><option>Art 4 (Fallecimiento)</option>
                     <option>Art 5 (Hijo)</option>
-                    <option>Maternidad / Embarazo</option>
-                    <option>Accidente ART</option>
                 </select>`}
-                <button class="btn-submit" onclick="sendForm('${type}')">ENVIAR WHATSAPP</button>
-                <button class="btn-cancel" onclick="cancelForm()">❌ CANCELAR Y VOLVER</button>
+                <button class="btn-submit" onclick="sendForm('${type}')">ENVIAR A RRHH</button>
+                <button class="btn-cancel" onclick="cancelForm()">❌ CANCELAR</button>
             </div>`;
         addMessage(formHtml);
+    }
+
+    function sendForm(type) {
+        const d = document.getElementById('date_input').value;
+        const s = document.getElementById('sec_input').value;
+        const v = document.getElementById('val_input').value;
+        if(!d || !v || !s) return alert("Completa todos los campos");
+        const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Usuario:* ${userName}\n*Secretaría:* ${s}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
+        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
+        addMessage("✅ Solicitud enviada.", 'bot');
+        setTimeout(() => showMenu('main'), 2000);
     }
 
     function cancelForm() {
@@ -170,33 +186,16 @@
         setTimeout(() => showMenu('main'), 1000);
     }
 
-    function sendForm(type) {
-        const d = document.getElementById('date_input').value;
-        const v = document.getElementById('val_input').value;
-        if(!d || !v) return alert("Completa los datos");
-        const msg = `*SOLICITUD DE ${type.toUpperCase()}*\n*Usuario:* ${userName}\n*Inicio:* ${d}\n*Detalle:* ${v}`;
-        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
-        addMessage("✅ Solicitud enviada.", 'bot');
-        setTimeout(() => showMenu('main'), 2000);
-    }
-
     function processInput() {
         const input = document.getElementById('userInput');
         const val = input.value.trim();
         if (!userName) {
-            const tieneLetras = /[a-zA-Z]/.test(val);
-            const tieneNumeros = /\d/.test(val);
-            if (!tieneLetras || !tieneNumeros || val.length < 7) {
-                alert("Seguridad: Debes ingresar Nombre, Apellido y Legajo (ej: Juan Perez 1234) para acceder.");
-                return;
-            }
-            addMessage(val, 'user');
+            if (val.length < 7) { alert("Ingresá Nombre, Apellido y Legajo"); return; }
             userName = val;
             localStorage.setItem('user_name', val);
+            addMessage(val, 'user');
             addMessage(`Acceso concedido <b>${userName}</b>.`);
             showMenu('main');
-        } else {
-            addMessage(val, 'user');
         }
         input.value = "";
     }
@@ -206,8 +205,8 @@
 
     window.onload = () => {
         if (!userName) {
-            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Por seguridad, ingresá tu <b>Nombre, Apellido y Legajo</b>:");
-            toggleInput(true);
+            addMessage("Bienvenido al <b>Portal RRHH Chascomús</b>.<br><br>Ingresá tu <b>Nombre, Apellido y Legajo</b>:");
+            document.getElementById('inputBar').classList.add('show');
         } else {
             addMessage(`Hola de nuevo, <b>${userName}</b>.`);
             showMenu('main');
@@ -215,17 +214,6 @@
     };
 
     function clearSession() { if(confirm("¿Cerrar sesión?")) { localStorage.clear(); location.reload(); } }
-
-    // REGISTRO DE SERVICE WORKER PARA INSTALACIÓN COMO APP
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                console.log('SW registrado', reg);
-            }).catch(err => {
-                console.log('Error SW', err);
-            });
-        });
-    }
 </script>
 </body>
 </html>
