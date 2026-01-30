@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rrhh-v2';
+const CACHE_NAME = 'rrhh-v3';
 const assets = ['./', './index.html', './manifest.json', './logo.jpg'];
 
 self.addEventListener('install', e => {
